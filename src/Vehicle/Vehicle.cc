@@ -3940,6 +3940,23 @@ void Vehicle::gimbalControlValue(double pitch, double yaw)
                 MAV_MOUNT_MODE_MAVLINK_TARGETING);   // MAVLink Roll,Pitch,Yaw
 }
 
+void Vehicle::doSetRelayCmd(float relayId, float relayValue)
+{
+    // - NOTE - https://mavlink.io/en/messages/common.html#MAV_CMD_DO_SET_RELAY
+
+    sendMavCommand(
+                _defaultComponentId,
+                MAV_CMD_DO_SET_RELAY,
+                false,                              // show errors
+                relayId,                            // relay instance
+                relayValue,                         // value)
+                0,
+                0,
+                0,
+                0,
+                0);
+}
+
 void Vehicle::gimbalPitchStep(int direction)
 {
     if(_haveGimbalData) {

@@ -217,6 +217,7 @@ signals:
     void setVtolInFwdFlight         (bool set);
     void setFlightMode              (const QString& flightMode);
     void emergencyStop              ();
+    void doSetRelayCmd              (float relayId, float relayValue);
 
 protected:
     void    _setDefaultCalibration  ();
@@ -236,6 +237,15 @@ protected:
     void    _yawStep                (int direction);
     double  _localYaw       = 0.0;
     double  _localPitch     = 0.0;
+
+    void _doSetRelayOneOn           ();
+    void _doSetRelayOneOff          ();
+
+    void _doSetRelayTwoOn           ();
+    void _doSetRelayTwoOff          ();
+
+    void _doSetRelayThreeOn           ();
+    void _doSetRelayThreeOff          ();
 
 private:
     virtual bool _open      ()          = 0;
@@ -352,6 +362,9 @@ private:
     static const char* _buttonActionGimbalRight;
     static const char* _buttonActionGimbalCenter;
     static const char* _buttonActionEmergencyStop;
+    static const char* _buttonActionRelayOne;
+    static const char* _buttonActionRelayTwo;
+    static const char* _buttonActionRelayThree;
 
 private slots:
     void _activeVehicleChanged(Vehicle* activeVehicle);

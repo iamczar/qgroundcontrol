@@ -65,6 +65,9 @@ const char* Joystick::_buttonActionGimbalLeft =         QT_TR_NOOP("Gimbal Left"
 const char* Joystick::_buttonActionGimbalRight =        QT_TR_NOOP("Gimbal Right");
 const char* Joystick::_buttonActionGimbalCenter =       QT_TR_NOOP("Gimbal Center");
 const char* Joystick::_buttonActionEmergencyStop =      QT_TR_NOOP("Emergency Stop");
+const char* Joystick::_buttonActionRelayOne =           QT_TR_NOOP("Relay One");
+const char* Joystick::_buttonActionRelayTwo =           QT_TR_NOOP("Relay Two");
+const char* Joystick::_buttonActionRelayThree =         QT_TR_NOOP("Relay Three");
 
 const char* Joystick::_rgFunctionSettingsKey[Joystick::maxFunction] = {
     "RollAxis",
@@ -697,6 +700,7 @@ void Joystick::startPolling(Vehicle* vehicle)
             disconnect(this, &Joystick::centerGimbal,       _activeVehicle, &Vehicle::centerGimbal);
             disconnect(this, &Joystick::gimbalControlValue, _activeVehicle, &Vehicle::gimbalControlValue);
             disconnect(this, &Joystick::emergencyStop,      _activeVehicle, &Vehicle::emergencyStop);
+            disconnect(this, &Joystick::doSetRelayCmd,      _activeVehicle, &Vehicle::doSetRelayCmd);
         }
         // Always set up the new vehicle
         _activeVehicle = vehicle;
@@ -719,6 +723,7 @@ void Joystick::startPolling(Vehicle* vehicle)
             connect(this, &Joystick::centerGimbal,       _activeVehicle, &Vehicle::centerGimbal);
             connect(this, &Joystick::gimbalControlValue, _activeVehicle, &Vehicle::gimbalControlValue);
             connect(this, &Joystick::emergencyStop,      _activeVehicle, &Vehicle::emergencyStop);
+            connect(this, &Joystick::doSetRelayCmd,      _activeVehicle, &Vehicle::doSetRelayCmd);
         }
     }
     if (!isRunning()) {
@@ -738,6 +743,7 @@ void Joystick::stopPolling(void)
             disconnect(this, &Joystick::gimbalYawStep,      _activeVehicle, &Vehicle::gimbalYawStep);
             disconnect(this, &Joystick::centerGimbal,       _activeVehicle, &Vehicle::centerGimbal);
             disconnect(this, &Joystick::gimbalControlValue, _activeVehicle, &Vehicle::gimbalControlValue);
+            disconnect(this, &Joystick::doSetRelayCmd,      _activeVehicle, &Vehicle::doSetRelayCmd);
         }
         _exitThread = true;
     }
@@ -1027,6 +1033,24 @@ void Joystick::_executeButtonAction(const QString& action, bool buttonDown)
         }
     } else if(action == _buttonActionEmergencyStop) {
       if(buttonDown) emit emergencyStop();
+    } else if (action == _buttonActionRelayOne) {
+       if(buttonDown) {
+           emit _doSetRelayOneOn();
+       } else {
+           emit _doSetRelayOneOff();
+       }
+    } else if (action == _buttonActionRelayTwo) {
+       if(buttonDown) {
+           emit _doSetRelayTwoOn();
+       } else {
+           emit _doSetRelayTwoOff();
+       }
+    } else if (action == _buttonActionRelayThree) {
+       if(buttonDown) {
+           emit _doSetRelayThreeOn();
+       } else {
+           emit _doSetRelayThreeOff();
+       }
     } else {
         if (buttonDown && _activeVehicle) {
             for (auto& item : _customMavCommands) {
@@ -1055,6 +1079,36 @@ void Joystick::_yawStep(int direction)
     if(_localYaw < -180.0) _localYaw = -180.0;
     if(_localYaw >  180.0) _localYaw =  180.0;
     emit gimbalControlValue(_localPitch, _localYaw);
+}
+
+void Joystick::_doSetRelayOneOn()
+{
+    emit doSetRelayCmd(0.0,1.0);
+}
+
+void Joystick::_doSetRelayOneOff()
+{
+    emit doSetRelayCmd(0.0,0.0);
+}
+
+void Joystick::_doSetRelayTwoOn()
+{
+    emit doSetRelayCmd(1.0,1.0);
+}
+
+void Joystick::_doSetRelayTwoOff()
+{
+    emit doSetRelayCmd(1.0,0.0);
+}
+
+void Joystick::_doSetRelayThreeOn()
+{
+    emit doSetRelayCmd(2.0,1.0);
+}
+
+void Joystick::_doSetRelayThreeOff()
+{
+    emit doSetRelayCmd(2.0,0.0);
 }
 
 bool Joystick::_validAxis(int axis) const
@@ -1127,6 +1181,9 @@ void Joystick::_buildActionList(Vehicle* activeVehicle)
     for (auto& item : _customMavCommands)
         _assignableButtonActions.append(new AssignableButtonAction(this, item.name()));
 
+    _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayOne));
+    _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayTwo));
+    _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayThree));
     for(int i = 0; i < _assignableButtonActions.count(); i++) {
         AssignableButtonAction* p = qobject_cast<AssignableButtonAction*>(_assignableButtonActions[i]);
         _availableActionTitles << p->action();
