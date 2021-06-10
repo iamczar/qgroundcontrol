@@ -247,6 +247,13 @@ protected:
     void _doSetRelayThreeOn           ();
     void _doSetRelayThreeOff          ();
 
+    void _doSetRelayFourOn           ();
+    void _doSetRelayFourOff          ();
+
+    void _doSetRelayFiveOn           ();
+    void _doSetRelayFiveOff          ();
+
+
 private:
     virtual bool _open      ()          = 0;
     virtual void _close     ()          = 0;
@@ -365,6 +372,8 @@ private:
     static const char* _buttonActionRelayOne;
     static const char* _buttonActionRelayTwo;
     static const char* _buttonActionRelayThree;
+    static const char* _buttonActionRelayFour;
+    static const char* _buttonActionRelayFive;
 
 private slots:
     void _activeVehicleChanged(Vehicle* activeVehicle);

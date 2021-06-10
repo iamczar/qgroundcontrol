@@ -68,6 +68,8 @@ const char* Joystick::_buttonActionEmergencyStop =      QT_TR_NOOP("Emergency St
 const char* Joystick::_buttonActionRelayOne =           QT_TR_NOOP("Relay One");
 const char* Joystick::_buttonActionRelayTwo =           QT_TR_NOOP("Relay Two");
 const char* Joystick::_buttonActionRelayThree =         QT_TR_NOOP("Relay Three");
+const char* Joystick::_buttonActionRelayFour =          QT_TR_NOOP("Gear Shift Up");
+const char* Joystick::_buttonActionRelayFive =          QT_TR_NOOP("Gear Shift Down");
 
 const char* Joystick::_rgFunctionSettingsKey[Joystick::maxFunction] = {
     "RollAxis",
@@ -1051,6 +1053,18 @@ void Joystick::_executeButtonAction(const QString& action, bool buttonDown)
        } else {
            emit _doSetRelayThreeOff();
        }
+    } else if (action == _buttonActionRelayFour) {
+       if(buttonDown) {
+           emit _doSetRelayFourOn();
+       } else {
+           emit _doSetRelayFourOff();
+       }
+    } else if (action == _buttonActionRelayFive) {
+       if(buttonDown) {
+           emit _doSetRelayFiveOn();
+       } else {
+           emit _doSetRelayFiveOff();
+       }
     } else {
         if (buttonDown && _activeVehicle) {
             for (auto& item : _customMavCommands) {
@@ -1109,6 +1123,26 @@ void Joystick::_doSetRelayThreeOn()
 void Joystick::_doSetRelayThreeOff()
 {
     emit doSetRelayCmd(2.0,0.0);
+}
+
+void Joystick::_doSetRelayFourOn()
+{
+    emit doSetRelayCmd(3.0,1.0);
+}
+
+void Joystick::_doSetRelayFourOff()
+{
+    emit doSetRelayCmd(3.0,0.0);
+}
+
+void Joystick::_doSetRelayFiveOn()
+{
+    emit doSetRelayCmd(4.0,1.0);
+}
+
+void Joystick::_doSetRelayFiveOff()
+{
+    emit doSetRelayCmd(4.0,0.0);
 }
 
 bool Joystick::_validAxis(int axis) const
@@ -1184,6 +1218,8 @@ void Joystick::_buildActionList(Vehicle* activeVehicle)
     _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayOne));
     _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayTwo));
     _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayThree));
+    _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayFour));
+    _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayFive));
     for(int i = 0; i < _assignableButtonActions.count(); i++) {
         AssignableButtonAction* p = qobject_cast<AssignableButtonAction*>(_assignableButtonActions[i]);
         _availableActionTitles << p->action();
