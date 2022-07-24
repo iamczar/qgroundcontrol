@@ -253,6 +253,9 @@ protected:
     void _doSetRelayFiveOn           ();
     void _doSetRelayFiveOff          ();
 
+    void _doSetRelaySixOn           ();
+    void _doSetRelaySixOff          ();
+
 
 private:
     virtual bool _open      ()          = 0;
