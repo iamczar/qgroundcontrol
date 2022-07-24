@@ -68,8 +68,9 @@ const char* Joystick::_buttonActionEmergencyStop =      QT_TR_NOOP("Emergency St
 const char* Joystick::_buttonActionRelayOne =           QT_TR_NOOP("Head Lights");
 const char* Joystick::_buttonActionRelayTwo =           QT_TR_NOOP("Starter");
 const char* Joystick::_buttonActionRelayThree =         QT_TR_NOOP("Ignition");
-const char* Joystick::_buttonActionRelayFour =          QT_TR_NOOP("Gear Shift Up");
-const char* Joystick::_buttonActionRelayFive =          QT_TR_NOOP("Gear Shift Down");
+const char* Joystick::_buttonActionRelayFour =          QT_TR_NOOP("Drive");
+const char* Joystick::_buttonActionRelayFive =          QT_TR_NOOP("Park");
+const char* Joystick::_buttonActionRelaySix =           QT_TR_NOOP("Reverse");
 
 const char* Joystick::_rgFunctionSettingsKey[Joystick::maxFunction] = {
     "RollAxis",
@@ -1065,6 +1066,12 @@ void Joystick::_executeButtonAction(const QString& action, bool buttonDown)
        } else {
            emit _doSetRelayFiveOff();
        }
+    } else if (action == _buttonActionRelaySix) {
+        if(buttonDown) {
+            emit _doSetRelayFiveOn();
+        } else {
+            emit _doSetRelayFiveOff();
+        }
     } else {
         if (buttonDown && _activeVehicle) {
             for (auto& item : _customMavCommands) {
@@ -1145,6 +1152,16 @@ void Joystick::_doSetRelayFiveOff()
     emit doSetRelayCmd(4.0,0.0);
 }
 
+void Joystick::_doSetRelaySixOn()
+{
+    emit doSetRelayCmd(5.0,1.0);
+}
+
+void Joystick::_doSetRelaySixOff()
+{
+    emit doSetRelayCmd(5.0,0.0);
+}
+
 bool Joystick::_validAxis(int axis) const
 {
     if(axis >= 0 && axis < _axisCount) {
@@ -1220,6 +1237,7 @@ void Joystick::_buildActionList(Vehicle* activeVehicle)
     _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayThree));
     _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayFour));
     _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelayFive));
+    _assignableButtonActions.append(new AssignableButtonAction(this, _buttonActionRelaySix));
     for(int i = 0; i < _assignableButtonActions.count(); i++) {
         AssignableButtonAction* p = qobject_cast<AssignableButtonAction*>(_assignableButtonActions[i]);
         _availableActionTitles << p->action();
