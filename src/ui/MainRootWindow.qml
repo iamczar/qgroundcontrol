@@ -164,6 +164,12 @@ ApplicationWindow {
         showTool(qsTr("Application Settings"), "AppSettings.qml", "/res/QGCLogoWhite")
     }
 
+    function showPdactPage() {
+        showTool(qsTr("Pdact Page"), "PdactMainPage.qml", "/qmlimages/PDACT/BrandImage")
+    }
+
+
+
     //-------------------------------------------------------------------------
     //-- Global simple message dialog
 
@@ -337,6 +343,22 @@ ApplicationWindow {
                             if (!mainWindow.preventViewSwitch()) {
                                 toolSelectDialog.close()
                                 mainWindow.showSettingsTool()
+                            }
+                        }
+                    }
+
+                    SubMenuButton {
+                        id:                 showPdactPageButton
+                        height:             toolSelectDialog._toolButtonHeight
+                        Layout.fillWidth:   true
+                        text:               qsTr("Pdact Settings")
+                        imageResource:      "/qmlimages/PDACT/BrandImage"
+                        imageColor:         "transparent"
+                        visible:            !QGroundControl.corePlugin.options.combineSettingsAndSetup
+                        onClicked: {
+                            if (!mainWindow.preventViewSwitch()) {
+                                toolSelectDialog.close()
+                                mainWindow.showPdactPage()
                             }
                         }
                     }

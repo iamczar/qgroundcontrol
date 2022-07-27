@@ -377,6 +377,7 @@ private:
     static const char* _buttonActionRelayThree;
     static const char* _buttonActionRelayFour;
     static const char* _buttonActionRelayFive;
+    static const char* _buttonActionRelaySix;
 
 private slots:
     void _activeVehicleChanged(Vehicle* activeVehicle);
