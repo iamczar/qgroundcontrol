@@ -1068,9 +1068,9 @@ void Joystick::_executeButtonAction(const QString& action, bool buttonDown)
        }
     } else if (action == _buttonActionRelaySix) {
         if(buttonDown) {
-            emit _doSetRelayFiveOn();
+            emit _doSetRelaySixOn();
         } else {
-            emit _doSetRelayFiveOff();
+            emit _doSetRelaySixOff();
         }
     } else {
         if (buttonDown && _activeVehicle) {
