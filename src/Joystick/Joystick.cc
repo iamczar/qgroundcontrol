@@ -1114,27 +1114,27 @@ void Joystick::_doSetRelayOneOff()
 
 void Joystick::_doSetRelayTwoOn()
 {
-    emit doSetRelayCmd(1.0,1.0);
+    emit (1.0,1.0);
 }
 
 void Joystick::_doSetRelayTwoOff()
 {
-    emit doSetRelayCmd(1.0,0.0);
+    emit (1.0,0.0);
 }
 
 void Joystick::_doSetRelayThreeOn()
 {
-    emit doSetRelayCmd(2.0,1.0);
+    emit (2.0,1.0);
 }
 
 void Joystick::_doSetRelayThreeOff()
 {
-    emit doSetRelayCmd(2.0,0.0);
+    emit (2.0,0.0);
 }
 
 void Joystick::_doSetRelayFourOn()
 {
-    emit doSetRelayCmd(3.0,1.0);
+    emit (3.0,1.0);
 }
 
 void Joystick::_doSetRelayFourOff()
